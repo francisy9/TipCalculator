@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     var tipPlusOne = 0.1
     var numberOfPeople = 2
     var total = 0.00
+    var eachPayTo2Dp = "0.0"
     
     
     @IBAction func tipChanged(_ sender: UIButton) {
@@ -42,14 +43,25 @@ class ViewController: UIViewController {
         billTextField.endEditing(true)
     }
     @IBAction func calculatePressed(_ sender: UIButton) {
-        if billTextField.text != nil {
+        if billTextField.text != "" {
             total = Double(billTextField.text!)!
             let final = total * tipPlusOne
             let eachPay = final / Double(numberOfPeople)
-            let eachPayTo2Dp = String(format: "%.2f", eachPay)
-            print(eachPayTo2Dp)
+            eachPayTo2Dp = String(format: "%.2f", eachPay)
+            
         }
+        self.performSegue(withIdentifier:"toResults", sender: self)
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
+        if segue.identifier == "toResults" {
+            let destinationVC = segue.destination as! ResultsViewController
+            destinationVC.result = eachPayTo2Dp
+            destinationVC.numberSplit = numberOfPeople
+            destinationVC.tipP = Int ((tipPlusOne-0.999999) * 100)
+        }
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
     }
     
     override func viewDidLoad() {
